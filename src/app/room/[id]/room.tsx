@@ -1,21 +1,43 @@
 "use client";
 
-import { useMediaStream, usePeer } from "@/shared";
-import { PlayerVideo } from "@/shared/components";
+import { useMediaStream, usePeer, UserInfo, UserList } from "@/shared";
+import { IconWebCam, PlayerVideo, IconMicrofono } from "@/shared/components";
 import { useSocketStore } from "@/socket";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import style from "./player.module.css";
+import { usePlayers } from "@/shared/hooks";
 
 export default function PageRoom() {
   const params = useParams<{ id: string }>();
   const { socket } = useSocketStore((state) => state);
   const { myID, peer } = usePeer({ roomId: params?.id ?? "" });
-  const { stream, toggleTrack } = useMediaStream();
-  const [clients, setClients] = useState<{ [key: string]: any }>({});
+  const { stream } = useMediaStream();
+  const { clients, setClients, toggleTrack } = usePlayers({
+    myId: myID,
+    roomId: params?.id,
+  });
+  console.log("clients", clients);
+  useEffect(() => {
+    socket?.on("updateList", (userId, type) => {
+      const stateCam =
+        type === "video" ? !clients[userId]?.playing : !clients[userId]?.muted;
+
+      const infoUser: UserInfo =
+        type === "video"
+          ? { ...clients[userId], playing: stateCam }
+          : { ...clients[userId], muted: stateCam };
+      const updateList: UserList = {
+        ...clients,
+        [userId]: infoUser,
+      };
+      setClients(updateList);
+    });
+  }, [clients, setClients, socket]);
 
   useEffect(() => {
     if (!myID) return;
+    console.log("aqui");
     setClients((prev) => ({
       ...prev,
       [myID]: {
@@ -23,6 +45,7 @@ export default function PageRoom() {
         muted: true,
         playing: true,
         type: "main",
+        rol: "admin",
       },
     }));
   }, [myID]);
@@ -62,8 +85,8 @@ export default function PageRoom() {
             url: stream,
             muted: true,
             playing: true,
-            rol: "client",
-            type: "visit",
+            type: "visited",
+            rol: "user",
           },
         }));
       });
@@ -95,7 +118,12 @@ export default function PageRoom() {
         <div className={style.actionBtn}>
           <p>action</p>
           <button onClick={() => toggleTrack("video")}>
-            camara off
+            {" "}
+            <IconWebCam on={clients[myID]?.playing} /> camara off
+          </button>
+          <button onClick={() => toggleTrack("audio")}>
+            {" "}
+            <IconMicrofono off={clients[myID]?.muted} /> microfono off
           </button>
         </div>
       </div>
