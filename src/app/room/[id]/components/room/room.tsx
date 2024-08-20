@@ -1,19 +1,25 @@
 "use client";
 
 import { useMediaStream, usePeer, UserInfo, UserList } from "@/shared";
-import { IconWebCam, PlayerVideo, IconMicrofono } from "@/shared/components";
+import {
+  IconWebCam,
+  PlayerVideo,
+  IconMicrofono,
+  IconUser,
+} from "@/shared/components";
 import { useSocketStore } from "@/socket";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import style from "./player.module.css";
 import { usePlayers } from "@/shared/hooks";
+import IconCallEnd from "@/shared/components/icons/icon-call-end";
 
 export function PageRoom() {
   const params = useParams<{ id: string }>();
   const { socket } = useSocketStore((state) => state);
   const { myID, peer } = usePeer({ roomId: params?.id ?? "" });
   const { stream } = useMediaStream();
-  const { clients, setClients, toggleTrack } = usePlayers({
+  const { clients, setClients, toggleTrack, userConnected } = usePlayers({
     myId: myID,
     roomId: params?.id,
   });
@@ -32,6 +38,12 @@ export function PageRoom() {
         [userId]: infoUser,
       };
       setClients(updateList);
+    });
+
+    socket?.on("userDelete", (userId) => {
+      const useDelete = { ...clients };
+      delete useDelete[userId];
+      setClients(useDelete);
     });
   }, [clients, setClients, socket]);
 
@@ -97,7 +109,7 @@ export function PageRoom() {
     <div className={style.contentMain}>
       <div className={style["content-player"]}>
         <div className={style.player}>
-          {clients[myID] && (
+          {clients[myID] ? (
             <PlayerVideo
               playerId={myID}
               url={clients[myID].url}
@@ -106,6 +118,8 @@ export function PageRoom() {
               isMain={clients[myID].type === "main"}
               length={Object.keys(clients).length}
             />
+          ) : (
+            <IconUser size="30%" />
           )}
 
           {Object.keys(clients)
@@ -141,6 +155,12 @@ export function PageRoom() {
             }`}
           >
             <IconMicrofono off={clients[myID]?.muted} />
+          </button>
+          <button
+            onClick={() => userConnected(myID)}
+            className={`${style.btn} ${style.delete}`}
+          >
+            <IconCallEnd />
           </button>
         </div>
       </div>

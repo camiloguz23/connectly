@@ -1,4 +1,3 @@
-import BtnHome from "@/shared/components/btn-home";
 import style from "./init.module.css";
 import { IconStreamMain } from "@/shared/components";
 import { InitMeeting } from "./components";
@@ -11,7 +10,6 @@ export default function Home() {
         <IconStreamMain />
         <InitMeeting />
       </div>
-      <BtnHome />
     </main>
   );
 }

@@ -5,9 +5,9 @@
     "btn" 100px
     / 1fr;
 
-  height: 98%;
+  height: 98vh;
   background-color: black;
-  width: 98%;
+  width: 98vw;
   border-radius: 10px;
 
   .player {
@@ -20,6 +20,7 @@
     position: relative;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
   }
 
   .actionBtn {
@@ -38,9 +39,14 @@
       justify-content: center;
       align-items: center;
       font-size: 30px;
+      cursor: pointer;
 
       &.active {
         background-color: var(--purple);
+      }
+
+      &.delete {
+        background-color: red;
       }
     }
   }

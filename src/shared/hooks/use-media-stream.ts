@@ -3,15 +3,43 @@ import { useEffect, useRef, useState } from "react";
 export const useMediaStream = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [screenStream, setScreenStream] = useState<MediaStream | null>(null);
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedVideoDevice, setSelectedVideoDevice] = useState<
+    string | null | undefined
+  >(null);
+  const [selectedAudioDevice, setSelectedAudioDevice] = useState<
+    string | null | undefined
+  >(null);
   const isStreamSet = useRef(false);
   const [online, setOnline] = useState(true);
 
-  const onMediaStream = async () => {
+  const onMediaStream = async (
+    videoDeviceId?: string | null,
+    audioDeviceId?: string | null
+  ) => {
     const streamData = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
+      video: videoDeviceId ? { deviceId: videoDeviceId } : true,
+      audio: audioDeviceId ? { deviceId: audioDeviceId } : true,
     });
     setStream(streamData);
+  };
+
+  const getDevices = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const deviceList = devices.filter(
+      (device) => device.kind === "videoinput" || device.kind === "audioinput"
+    );
+    setDevices(
+      devices.filter(
+        (device) => device.kind === "videoinput" || device.kind === "audioinput"
+      )
+    );
+  };
+
+  const handleDeviceChange = async () => {
+    if (selectedVideoDevice || selectedAudioDevice) {
+      await onMediaStream(selectedVideoDevice, selectedAudioDevice);
+    }
   };
 
   useEffect(() => {
@@ -20,6 +48,7 @@ export const useMediaStream = () => {
 
     try {
       onMediaStream();
+      getDevices();
     } catch (e) {
       console.log(e);
     }
@@ -64,5 +93,13 @@ export const useMediaStream = () => {
       setScreenStream(null);
     }
   };
-  return { stream, toggleTrack, stopStream, startScreenShare, stopScreenShare };
+  return {
+    stream,
+    toggleTrack,
+    stopStream,
+    startScreenShare,
+    stopScreenShare,
+    handleDeviceChange,
+    devices,
+  };
 };

@@ -24,6 +24,17 @@ export function InitMeeting() {
       <button onClick={onCreateJoin} className={styles.btnCreateRoom}>
         Crear una Reunion
       </button>
+      <hr className={styles.divider} />
+      <input
+        className={styles.inputIDRoom}
+        type="text"
+        value={valueId}
+        onChange={(e) => setValueId(e.target.value)}
+        placeholder="Ingresa el ID de la Reunion"
+      />
+      <button onClick={joinRoom} className={styles.btnJoinRoom}>
+        Unirse a la Reunion
+      </button>
     </div>
   );
 }

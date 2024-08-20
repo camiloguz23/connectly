@@ -2,6 +2,7 @@ import { useState } from "react";
 import { UserList } from "../type";
 import { useSocketStore } from "@/socket";
 import { usePeer } from "./use-peer";
+import { useRouter } from "next/navigation";
 
 interface PlayerProp {
   myId: string;
@@ -11,7 +12,8 @@ interface PlayerProp {
 export const usePlayers = ({ myId, roomId }: PlayerProp) => {
   const { socket } = useSocketStore((state) => state);
   const [clients, setClients] = useState<UserList>({});
-  const {} = usePeer({ roomId });
+  const { peer } = usePeer({ roomId });
+  const { push } = useRouter();
 
   const toggleTrack = (type: "video" | "audio") => {
     const client = clients[myId];
@@ -27,9 +29,16 @@ export const usePlayers = ({ myId, roomId }: PlayerProp) => {
     }
   };
 
+  const userConnected = (userID: any) => {
+    socket?.emit("user-leave", myId, roomId);
+    peer?.disconnect();
+    push("/");
+  };
+
   return {
     clients,
     setClients,
     toggleTrack,
+    userConnected,
   };
 };

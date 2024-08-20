@@ -1,4 +1,3 @@
-export * from "./btn-home";
 export * from "./icons/icon-microfono";
 export * from "./icons/icon-stream-main";
 export * from "./icons/icon-web-cam";
