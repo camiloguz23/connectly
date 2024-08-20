@@ -1,13 +1,15 @@
 :root {
-  --purple: #2a0845;
-  --pik: #6441a5;
+  --purple: hsla(272, 81%, 16%, 1);
+  --purpleTransparent: hsla(272, 81%, 16%, 0.1);
+  --Royal-Purple: hsl(256, 44%, 45%);
 }
-
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  font-family: var(--font-aladin);
+  color: white;
 }
 
 body {
@@ -15,12 +17,12 @@ body {
   background: -webkit-linear-gradient(
     to bottom,
     var(--purple),
-    var(--pik)
+    var(--Royal-Purple)
   ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(
     to bottom,
     var(--purple),
-    var(--pik)
+    var(--Royal-Purple)
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
   height: 100vh;

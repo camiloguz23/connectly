@@ -1,6 +1,7 @@
 import BtnHome from "@/shared/components/btn-home";
 import style from "./init.module.css";
 import { IconStreamMain } from "@/shared/components";
+import { InitMeeting } from "./components";
 
 export default function Home() {
   return (
@@ -8,9 +9,7 @@ export default function Home() {
       <h2>Meet code</h2>
       <div className={style.card}>
         <IconStreamMain />
-        <form className={style.form}>
-          <p>Ingresa tu nombre</p>
-        </form>
+        <InitMeeting />
       </div>
       <BtnHome />
     </main>

@@ -1,0 +1,24 @@
+.content-video {
+  width: 257px;
+  height: 257px;
+  border-radius: 10px;
+  overflow: hidden;
+
+  &.onlyUser {
+    width: 50%;
+    height: 55%;
+  }
+
+  &.onlyList {
+    width: 50%;
+    height: 55%;
+  }
+
+  &.onlyAdmin {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    right: 10px;
+    top: 3px;
+  }
+}

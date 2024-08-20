@@ -1,0 +1,55 @@
+.content-player {
+  display: grid;
+  grid:
+    "player" 1fr
+    "btn" 100px
+    / 1fr;
+
+  height: 98%;
+  background-color: black;
+  width: 98%;
+  border-radius: 10px;
+
+  .player {
+    grid-area: player;
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .actionBtn {
+    grid-area: btn;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    .btn {
+      border-radius: 50%;
+      padding: 10px;
+      border: 1px solid white;
+      background-color: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 30px;
+
+      &.active {
+        background-color: var(--purple);
+      }
+    }
+  }
+}
+
+.contentMain {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import style from "./player.module.css";
 import { usePlayers } from "@/shared/hooks";
 
-export default function PageRoom() {
+export function PageRoom() {
   const params = useParams<{ id: string }>();
   const { socket } = useSocketStore((state) => state);
   const { myID, peer } = usePeer({ roomId: params?.id ?? "" });
@@ -17,7 +17,7 @@ export default function PageRoom() {
     myId: myID,
     roomId: params?.id,
   });
-  console.log("clients", clients);
+
   useEffect(() => {
     socket?.on("updateList", (userId, type) => {
       const stateCam =
@@ -95,35 +95,52 @@ export default function PageRoom() {
 
   return (
     <div className={style.contentMain}>
-      PageRoom id {"->"}
-      {params.id} userID {"->"} {myID}
-      <p>
-        ----------------------------------------------------------------------------
-      </p>
       <div className={style["content-player"]}>
         <div className={style.player}>
-          {Object.keys(clients).map((key) => {
-            const { url, muted, playing } = clients[key];
-            return (
-              <PlayerVideo
-                key={key}
-                playerId={key}
-                url={url}
-                muted={muted}
-                playing={playing}
-              />
-            );
-          })}
+          {clients[myID] && (
+            <PlayerVideo
+              playerId={myID}
+              url={clients[myID].url}
+              muted={clients[myID].muted}
+              playing={clients[myID].playing}
+              isMain={clients[myID].type === "main"}
+              length={Object.keys(clients).length}
+            />
+          )}
+
+          {Object.keys(clients)
+            .filter((item) => item !== myID)
+            .map((key) => {
+              const { url, muted, playing } = clients[key];
+              return (
+                <PlayerVideo
+                  key={key}
+                  playerId={key}
+                  url={url}
+                  muted={muted}
+                  playing={playing}
+                  length={Object.keys(clients).length}
+                  list={true}
+                />
+              );
+            })}
         </div>
         <div className={style.actionBtn}>
-          <p>action</p>
-          <button onClick={() => toggleTrack("video")}>
-            {" "}
-            <IconWebCam on={clients[myID]?.playing} /> camara off
+          <button
+            onClick={() => toggleTrack("video")}
+            className={`${style.btn} ${
+              clients[myID]?.playing ? style.active : ""
+            }`}
+          >
+            <IconWebCam on={clients[myID]?.playing} />
           </button>
-          <button onClick={() => toggleTrack("audio")}>
-            {" "}
-            <IconMicrofono off={clients[myID]?.muted} /> microfono off
+          <button
+            onClick={() => toggleTrack("audio")}
+            className={`${style.btn} ${
+              clients[myID]?.muted ? "" : style.active
+            }`}
+          >
+            <IconMicrofono off={clients[myID]?.muted} />
           </button>
         </div>
       </div>
