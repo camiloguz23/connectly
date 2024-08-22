@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { TypeMediaStream } from "../type";
 
 export const useMediaStream = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [screenStream, setScreenStream] = useState<MediaStream | null>(null);
-  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [devices, setDevices] = useState<TypeMediaStream>({
+    audioinput: [],
+    videoinput: [],
+  });
+  
   const [selectedVideoDevice, setSelectedVideoDevice] = useState<
     string | null | undefined
   >(null);
@@ -30,9 +35,7 @@ export const useMediaStream = () => {
       (device) => device.kind === "videoinput" || device.kind === "audioinput"
     );
     setDevices(
-      devices.filter(
-        (device) => device.kind === "videoinput" || device.kind === "audioinput"
-      )
+      Object.groupBy(deviceList, (item) => item.kind) as TypeMediaStream
     );
   };
 
@@ -57,15 +60,11 @@ export const useMediaStream = () => {
   const toggleTrack = (type: "video" | "audio") => {
     const value = !online;
     setOnline(value);
-    if (stream) {
-      const videoTrack = stream.getVideoTracks()[0];
-      if (videoTrack && !value) {
-        videoTrack.stop();
-      } else {
-        navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-          setStream(stream);
-        });
-      }
+    if (online) {
+      const videoTrack = stream?.getVideoTracks()[0];
+      videoTrack?.stop();
+    } else {
+      onMediaStream();
     }
   };
 

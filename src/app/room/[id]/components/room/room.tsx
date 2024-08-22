@@ -1,28 +1,34 @@
 "use client";
 
-import { useMediaStream, usePeer, UserInfo, UserList } from "@/shared";
 import {
-  IconWebCam,
-  PlayerVideo,
-  IconMicrofono,
-  IconUser,
-} from "@/shared/components";
+  IconSettings,
+  useMediaStream,
+  usePeer,
+  UserInfo,
+  UserList,
+} from "@/shared";
+import { IconWebCam, PlayerVideo, IconMicrofono, IconUser } from "@/shared";
 import { useSocketStore } from "@/socket";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import style from "./player.module.css";
-import { usePlayers } from "@/shared/hooks";
+import { useBoolean, usePlayers } from "@/shared/hooks";
 import IconCallEnd from "@/shared/components/icons/icon-call-end";
 
 export function PageRoom() {
   const params = useParams<{ id: string }>();
   const { socket } = useSocketStore((state) => state);
   const { myID, peer } = usePeer({ roomId: params?.id ?? "" });
-  const { stream } = useMediaStream();
+  const {
+    stream,
+    stopStream,
+    devices,
+  } = useMediaStream();
   const { clients, setClients, toggleTrack, userConnected } = usePlayers({
     myId: myID,
     roomId: params?.id,
   });
+  const { value, toggle } = useBoolean();
 
   useEffect(() => {
     socket?.on("updateList", (userId, type) => {
@@ -138,10 +144,24 @@ export function PageRoom() {
                 />
               );
             })}
+          {value && (
+            <div className={style.menuDevice}>
+              <h3>Dispositivos de audio</h3>
+              {devices?.audioinput.map((device) => (
+                <p key={device.deviceId}>{device.label}</p>
+              ))}
+              <h3>Dispositivos de video</h3>
+              {devices?.videoinput.map((device) => (
+                <p key={device.deviceId}>{device.label}</p>
+              ))}
+            </div>
+          )}
         </div>
         <div className={style.actionBtn}>
           <button
-            onClick={() => toggleTrack("video")}
+            onClick={() => {
+              toggleTrack("video");
+            }}
             className={`${style.btn} ${
               clients[myID]?.playing ? style.active : ""
             }`}
@@ -157,10 +177,21 @@ export function PageRoom() {
             <IconMicrofono off={clients[myID]?.muted} />
           </button>
           <button
-            onClick={() => userConnected(myID)}
+            onClick={() => {
+              stopStream();
+              userConnected(myID);
+            }}
             className={`${style.btn} ${style.delete}`}
           >
             <IconCallEnd />
+          </button>
+          <button
+            onClick={() => {
+              toggle();
+            }}
+            className={`${style.btn}`}
+          >
+            <IconSettings />
           </button>
         </div>
       </div>

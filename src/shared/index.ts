@@ -1,4 +1,4 @@
+export * from "./components/icons";
 export * from "./components/player/player-video";
-export * from "./hooks/use-media-stream";
-export * from "./hooks/use-peer";
+export * from "./hooks"
 export * from "./type/user-lits";

@@ -23,6 +23,20 @@
     overflow: hidden;
   }
 
+  .menuDevice {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    bottom: 20px;
+    left: 20px;
+    background-color: black;
+    border-radius: 8px;
+    padding: 30px;
+    border: 1px solid var(--purple);
+  }
+
   .actionBtn {
     grid-area: btn;
     display: flex;

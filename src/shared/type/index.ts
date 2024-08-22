@@ -1,1 +1,2 @@
-export * from './user-lits';
+export * from "./type-media";
+export * from "./user-lits";
