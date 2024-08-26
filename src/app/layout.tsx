@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { ProviderSocket } from "@/socket";
+import { Provider } from "@/shared";
 
 const inter = Roboto({
   subsets: ["latin"],
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.variable}>
-        <ProviderSocket>{children}</ProviderSocket>
+        <Provider>
+          <ProviderSocket>{children}</ProviderSocket>
+        </Provider>
       </body>
     </html>
   );

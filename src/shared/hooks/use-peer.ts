@@ -1,3 +1,5 @@
+"use client";
+
 import { useSocketStore } from "@/socket";
 import Peer from "peerjs";
 import { useEffect, useRef, useState } from "react";

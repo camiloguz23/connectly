@@ -1,0 +1,20 @@
+.containerToolTip {
+  position: relative;
+  transition: 0.5s;
+
+  .tooltip {
+    position: absolute;
+    top: -40px;
+    justify-content: center;
+    padding: 5px;
+    border: 1px solid white;
+    border-radius: 6px;
+    display: none;
+    text-wrap: nowrap;
+    text-align: center;
+  }
+
+  &:hover .tooltip {
+    display: block;
+  }
+}

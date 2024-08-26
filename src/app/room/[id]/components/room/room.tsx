@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  IconPeople,
   IconSettings,
   useMediaStream,
   usePeer,
@@ -12,23 +13,22 @@ import { useSocketStore } from "@/socket";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import style from "./player.module.css";
-import { useBoolean, usePlayers } from "@/shared/hooks";
+import { useBoolean, useCopy, usePlayers } from "@/shared/hooks";
 import IconCallEnd from "@/shared/components/icons/icon-call-end";
+import IconCopy from "@/shared/components/icons/icon-copy";
+import { UiTooltip } from "@/shared/components";
 
 export function PageRoom() {
   const params = useParams<{ id: string }>();
   const { socket } = useSocketStore((state) => state);
   const { myID, peer } = usePeer({ roomId: params?.id ?? "" });
-  const {
-    stream,
-    stopStream,
-    devices,
-  } = useMediaStream();
+  const { stream, stopStream, devices } = useMediaStream();
   const { clients, setClients, toggleTrack, userConnected } = usePlayers({
     myId: myID,
     roomId: params?.id,
   });
   const { value, toggle } = useBoolean();
+  const { copy } = useCopy();
 
   useEffect(() => {
     socket?.on("updateList", (userId, type) => {
@@ -193,6 +193,24 @@ export function PageRoom() {
           >
             <IconSettings />
           </button>
+          <button
+            onClick={() => {
+              false;
+            }}
+            className={`${style.btn}`}
+          >
+            <IconPeople />
+          </button>
+          <UiTooltip message="Copiar ID de la Reunion">
+            <button
+              onClick={() => {
+                copy(params.id);
+              }}
+              className={`${style.btn}`}
+            >
+              <IconCopy />
+            </button>
+          </UiTooltip>
         </div>
       </div>
     </div>

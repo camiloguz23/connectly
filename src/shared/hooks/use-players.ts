@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { UserList } from "../type";
 import { useSocketStore } from "@/socket";
