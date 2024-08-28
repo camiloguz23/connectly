@@ -55,7 +55,6 @@ export function PageRoom() {
 
   useEffect(() => {
     if (!myID) return;
-    console.log("aqui");
     setClients((prev) => ({
       ...prev,
       [myID]: {
@@ -185,22 +184,22 @@ export function PageRoom() {
           >
             <IconCallEnd />
           </button>
-          <button
+          {/* <button
             onClick={() => {
               toggle();
             }}
             className={`${style.btn}`}
           >
             <IconSettings />
-          </button>
-          <button
+          </button> */}
+          {/* <button
             onClick={() => {
               false;
             }}
             className={`${style.btn}`}
           >
             <IconPeople />
-          </button>
+          </button> */}
           <UiTooltip message="Copiar ID de la Reunion">
             <button
               onClick={() => {

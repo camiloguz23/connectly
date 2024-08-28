@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { io, Socket } from 'socket.io-client';
+import { create } from "zustand";
+import { io, Socket } from "socket.io-client";
 
 interface SocketStore {
   socket: Socket | null;
@@ -10,8 +10,9 @@ interface SocketStore {
 export const useSocketStore = create<SocketStore>((set) => ({
   socket: null,
   connectSocket: () => {
-    const socketInstance = io("http://localhost:3001");
-    set({ socket: socketInstance });
+    const socketInstance = io(process.env.NEXT_PUBLIC_URL_SOCKET as string);
+    //socket-stream-kappa.vercel.app/
+    https: set({ socket: socketInstance });
   },
   disconnectSocket: () => {
     set((state) => {
@@ -20,4 +21,3 @@ export const useSocketStore = create<SocketStore>((set) => ({
     });
   },
 }));
-
